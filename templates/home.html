@@ -1,3 +1,158 @@
-<h1>
-    Hello World
-</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boston House Price Prediction</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4; /* Solid background color */
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95); /* Solid background for clarity */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Increased shadow for separation */
+            transition: transform 0.3s;
+            position: relative;
+            z-index: 1; /* Higher z-index for the form */
+        }
+        .container:hover {
+            transform: scale(1.05);
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            border-color: #28a745;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+            transform: scale(1.1);
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        .explanation {
+            margin-top: 30px;
+            font-size: 1em;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container animate__animated animate__fadeIn">
+        <h1>Boston House Price Prediction</h1>
+        <form action="/predict" method="POST">
+            <div class="form-group">
+                <label for="CRIM">Crime Rate (CRIM):</label>
+                <input type="text" id="CRIM" name="CRIM" value="{{ request.form['CRIM'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="ZN">Residential Land Zone (ZN):</label>
+                <input type="text" id="ZN" name="ZN" value="{{ request.form['ZN'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="INDUS">Non-Retail Business Acres (INDUS):</label>
+                <input type="text" id="INDUS" name="INDUS" value="{{ request.form['INDUS'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="CHAS">Charles River Dummy Variable (CHAS):</label>
+                <input type="text" id="CHAS" name="CHAS" value="{{ request.form['CHAS'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="NOX">Nitric Oxides Concentration (NOX):</label>
+                <input type="text" id="NOX" name="NOX" value="{{ request.form['NOX'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="RM">Average Number of Rooms (RM):</label>
+                <input type="text" id="RM" name="RM" value="{{ request.form['RM'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="AGE">Proportion of Owner-Occupied Units Built Prior to 1940 (AGE):</label>
+                <input type="text" id="AGE" name="AGE" value="{{ request.form['AGE'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="DIS">Weighted Distances to Employment Centers (DIS):</label>
+                <input type="text" id="DIS" name="DIS" value="{{ request.form['DIS'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="RAD">Accessibility to Radial Highways (RAD):</label>
+                <input type="text" id="RAD" name="RAD" value="{{ request.form['RAD'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="TAX">Property Tax Rate (TAX):</label>
+                <input type="text" id="TAX" name="TAX" value="{{ request.form['TAX'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="PTRATIO">Pupil-Teacher Ratio (PTRATIO):</label>
+                <input type="text" id="PTRATIO" name="PTRATIO" value="{{ request.form['PTRATIO'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="B">Proportion of Black Residents (B):</label>
+                <input type="text" id="B" name="B" value="{{ request.form['B'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="LSTAT">Percentage of Lower Status Population (LSTAT):</label>
+                <input type="text" id="LSTAT" name="LSTAT" value="{{ request.form['LSTAT'] }}" required>
+            </div>
+            <button type="submit">Predict Price</button>
+            <button type="button" onclick="clearForm()">Clear</button>
+        </form>
+        <div class="result">{{ prediction_text }}</div>
+        <div class="explanation">
+            <h2>Feature Impact on Price</h2>
+            <p>Each feature has a significant impact on the predicted house price. For example:</p>
+            <ul>
+                <li><strong>CRIM:</strong> Higher crime rates typically lead to lower property values.</li>
+                <li><strong>RM:</strong> More rooms generally increase the value of the house.</li>
+                <li><strong>AGE:</strong> Older homes may have lower values unless they are well-maintained.</li>
+                <!-- Add more explanations as needed -->
+            </ul>
+        </div>
+    </div>
+    <script>
+        function clearForm() {
+            document.querySelector('form').reset();
+            document.querySelector('.result').innerText = '';
+        }
+    </script>
+</body>
+</html>
