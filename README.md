@@ -19,7 +19,7 @@
 15. [Docker](https://www.docker.com/get-started)
 
 
-==========================================================================================
+=========================================================================
 
 Create a new Environment  """  conda create -p environment_name python==x.x -y  """
 
